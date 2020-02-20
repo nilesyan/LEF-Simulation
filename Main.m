@@ -1,6 +1,6 @@
 function []=Main(tra)
 
-load('zfp508_ES.mat') 
+load('*.mat') 
 % load the genomic data
 % The genomic data is converted from the gene positions in the library
 % FST: Forward DNA strain
