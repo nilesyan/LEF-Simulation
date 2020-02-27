@@ -23,3 +23,5 @@
 # FindPairs.m: Given two points between which effective genomic distance is calculated, this program finds all the LEF pairs that need to be invloved in the calculation.
 
 # Cal_InvCovM.m: Given all the nodes in the loop configuration, this program returns the inverse of the covariance matrix.
+
+# PolymerSim.m: The evolution of loop configurations is taken as the input. Using Rouse model chain, the polymers with and without loops are simulated. MSDs of different beads are then calculated.
