@@ -1,24 +1,21 @@
-function []=Main(tra)
+function []=Main()
 
-load('*.mat') 
-% load the genomic data
-% The genomic data is converted from the gene positions in the library
+load('genome.mat') 
+% load the TSS data
+% The TSS data is converted from the gene positions in the library, binned
+% to the target resolution.
 % FST: Forward DNA strain
 % RST: Reversed DNA srain
-% The first two columns are the positions of gene promoters and terminators
-% (coverted with the desired resolution e.g. 10kb in mouse and 0.5kb in S. pombe)
-% The 3rd and the 4th columns are not used in the current model.
-% "zfp508_ES" is an example of a 6Mb region in the mouse genome.
 
-% Parameter Setting Section
-rng(tra) % generate random seeding
+%% Parameter Setting Section
+rng(1) % generate random seeding
 L = 600; % # of lattice
-N = 30;  % # of SMC pairs
-R_EXTEND = 3e-3; % SMC translocation velocity
-R_SMC = 1.22e-6*ones(N,1); % SMC fall-off rate (i.e. 1/lifetime)
-SMC_TIME = 2; % SMC residence time (time in solution)
-REBINDING_TIME = 1.7; % RNA polymerase binding time 
-%                       (i.e. SMC dwell time at promoters after initial binding)
+N = 30;  % # of SMC(LEF) pairs
+R_EXTEND = 1e-2; % LEF translocation velocity
+R_SMC = 5.6e-5*ones(N,1); % SMC fall-off rate (i.e. 1/lifetime)
+SMC_TIME = 0.59; % LEF residence time (time in solution)
+REBINDING_TIME = 0.53; % Remodeler binding time 
+%                       (i.e. LEF dwell time at promoters after initial binding)
 
 INIT_SMCL_SITES = -1 * ones(N,1); % initiate the LEF positions
 INIT_SMCR_SITES = -1 * ones(N,1); % -1 represent "unbound".
@@ -27,14 +24,12 @@ T_MAX = 5e2; % control parameter for events per step
 N_SNAPSHOTS = 1e6; % number of simulation steps
 BE = []; % boundary elements
 BE_perms = []; % bermeability of boundary elements
-DR(:,1) = [FST(:,1);RST(:,2)]; % FST: Forward strain; RST: Reversed strain 
-DR(:,2) = [FST(:,4);RST(:,4)]; % RNA level (not used in the simple sliding model)
-DR2(:,1) =  [FST(:,1);RST(:,2)];
-DR2 = unique(DR2);
+DR = [FST(:,1);RST(:,2)]; % FST: Forward strain; RST: Reversed strain 
+DR2 = unique(DR1);
 PERMS = []; % lattice permeability
 verbose = 1;
 
-% Program Initiation Section
+%% Program Initiation Section
 VELS = ones(2*N,1)*R_EXTEND;
 LIFESSMCS = zeros(N,1);
 REBINDING_TIMES = zeros(N,1);
@@ -101,7 +96,7 @@ for i = 1:LEFSYSTEM.N
     end
 end
 
-% Simulation Section 
+%% Event Execution Section 
 % - refer to do_event.m for event descriptions
 while snapshot_idx <= N_SNAPSHOTS
     LEFEvent = evheap.pop_event();
@@ -129,8 +124,9 @@ while snapshot_idx <= N_SNAPSHOTS
     end
 end
 
-% Hi-C Map Generation Section
+%% Hi-C Map Generation Section
 intv = 1e3; % # of averaged maps
-hmap = heatmap_3d(L,N,ts_traj,smc_lsites_traj,smc_rsites_traj,intv);
+steady = 1.5e4; % Estimated start of steady state
+hmap = heatmap_3d(L,N,ts_traj(steady:end),smc_lsites_traj(steady:end,:),smc_rsites_traj(steady:end,:),intv);
 
 end

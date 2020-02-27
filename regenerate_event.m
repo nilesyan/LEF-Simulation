@@ -5,13 +5,12 @@ function regenerate_event(LEFSystem, evheap, event_idx)
 %     modified.
 %
 %     Possible events:
-%     1 to N : SMC translocation
-%     N+1 to 2N : SMC initialtion at gene promoter
-%     2N+1 to 3N : SMC passive unbinding
-%     3N+1 to 4N : SMC rebinding to a randomly chosen site
+%     1 to N : LEF translocation
+%     N+1 to 2N : LEF initialtion at gene promoter
+%     2N+1 to 3N : LEF passive unbinding
+%     3N+1 to 4N : LEF rebinding to a randomly chosen site
 
-
-% A step to the left or to the right.
+    %LEF translocation
 if event_idx <= LEFSystem.N
     dir = LEFSystem.smc_dir(event_idx);
     loop_idx = event_idx;
@@ -47,21 +46,21 @@ if event_idx <= LEFSystem.N
         end
     end
     
-    %SMC initialtion gene start
+    %LEF initialtion gene start
 elseif event_idx > LEFSystem.N && event_idx <= 2 * LEFSystem.N
     loop_idx = event_idx - LEFSystem.N;
     if LEFSystem.smcs(loop_idx) > 0
         evheap.add_event(event_idx,LEFSystem.time +  exprnd(LEFSystem.rebinding_times(loop_idx)))
     end
     
-    %SMC unbinding
+    %LEF unbinding
 elseif event_idx > 2 * LEFSystem.N && event_idx <= 3 * LEFSystem.N
     loop_idx = event_idx - 2 * LEFSystem.N;
     if LEFSystem.smcs(loop_idx) > 0
         evheap.add_event(event_idx,LEFSystem.time + exprnd(LEFSystem.lifesmcs(loop_idx)))
     end
     
-    %SMC rebinding
+    %LEF rebinding
 elseif event_idx > 3 * LEFSystem.N && event_idx <= 4 * LEFSystem.N
     loop_idx = event_idx - 3 * LEFSystem.N;
     if LEFSystem.smcs(loop_idx) <= 0

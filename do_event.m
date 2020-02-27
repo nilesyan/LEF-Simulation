@@ -9,13 +9,13 @@ function sta = do_event(LEFSystem, evheap, event_idx)
 %     and 2 if the event was rebinding.
 %
 %     Possible events:
-%     1 to N : SMC translocation
-%     N+1 to 2N : SMC initialtion at gene promoter
-%     2N+1 to 3N : SMC passive unbinding
-%     3N+1 to 4N : SMC rebinding to a randomly chosen site
+%     1 to N : LEF translocation
+%     N+1 to 2N : LEF initialtion at gene promoter
+%     2N+1 to 3N : LEF passive unbinding
+%     3N+1 to 4N : LEF rebinding to a randomly chosen site
 
-
-if event_idx <= LEFSystem.N    
+    %LEF translocation
+if event_idx <= LEFSystem.N        
     dir = LEFSystem.smc_dir(event_idx);
     loop_idx = event_idx;
     if dir ==2
@@ -47,9 +47,8 @@ if event_idx <= LEFSystem.N
         end
     end
     
-    
-elseif event_idx > LEFSystem.N && event_idx <= 2 * LEFSystem.N
-    %SMC initialtion gene start
+    %LEF initialtion gene start
+elseif event_idx > LEFSystem.N && event_idx <= 2 * LEFSystem.N    
     loop_idx = event_idx - LEFSystem.N;
     sta=2;
     if LEFSystem.smc_dir(loop_idx) == 1
@@ -65,8 +64,8 @@ elseif event_idx > LEFSystem.N && event_idx <= 2 * LEFSystem.N
         regenerate_event(LEFSystem, evheap, loop_idx);
     end
     
-elseif event_idx > 2 * LEFSystem.N && event_idx <= 3 * LEFSystem.N
-    %SMC unbinding
+    %LEF unbinding
+elseif event_idx > 2 * LEFSystem.N && event_idx <= 3 * LEFSystem.N    
     loop_idx = event_idx - 2 * LEFSystem.N;
     
     sta = 2;
@@ -95,8 +94,8 @@ elseif event_idx > 2 * LEFSystem.N && event_idx <= 3 * LEFSystem.N
     regenerate_neighbours(LEFSystem, evheap, prev_pos2-1,2);
     regenerate_neighbours(LEFSystem, evheap, prev_pos2+1,1);
     
-elseif event_idx > 3 * LEFSystem.N && event_idx <= 4 * LEFSystem.N
-    %SMC rebinding
+    %LEF rebinding
+elseif event_idx > 3 * LEFSystem.N && event_idx <= 4 * LEFSystem.N    
     loop_idx = event_idx - 3 * LEFSystem.N;
     
     sta = 2;
