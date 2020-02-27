@@ -1,6 +1,6 @@
 # LEF-Simulation
 
-# SIMULATION CODE FOR THE SLIDING MODEL OF COMPOSITE LEF SIMULATION
+# SIMULATION CODE FOR THE COMPOSITE LEF MODEL
 
 # Main.m: Main program of loop extrusion simulation. The 1st part is parameter assginment. The 2nd part is parameter initiation. The 3rd part is event execution. The 4th part is contact map generation. The LEF model has the following features: 1 one-sided extrusion. 2 LEF loading at gene start sites. 3. LEF cannot go across each other.
 
